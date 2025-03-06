@@ -3,55 +3,72 @@ import React, { useState } from 'react'
 
 const AddBook = () => {
 
-const [data, setData] = useState({
-    url: "",
+  const [data, setData] = useState({
+    file: null, 
     title: "",
     author: "",
     desc: "",    
     price: "", 
     language: "",
-})
+});
 const headers = {
     id: localStorage.getItem('id'),
     authorization: `Bearer ${localStorage.getItem('token')}`,
 }
 const change = (e) => {
-    const {name, value} = e.target;
-    setData({
-        ...data,
-        [name]: value
-    })
-}
-const submit = async ()=>{
-    try {
-        if (
-            data.url === "" ||
-            data.title === "" ||
-            data.author === "" ||
-            data.desc === "" ||
-            data.price === "" ||
-            data.language === ""
-        ){
-            alert("Vui lòng nhập đầy đủ thông tin")
-        } else {
-            const response = await axios.post("http://localhost:3000/api/v1/add-book", 
-            data, 
-            {headers}
-        );
-        setData({
-            url: "",
-            title: "",
-            author: "",
-            desc: "",    
-            price: "", 
-            language: "",
-        });
-        alert(response.data.message)
-        }
-    } catch (error) {
-        alert("Thêm sách thất bại")
-    }
-}
+  const { name, value, files } = e.target;
+  if (name === "file") {
+      setData({
+          ...data,
+          file: files[0],
+      });
+  } else {
+      setData({
+          ...data,
+          [name]: value,
+      });
+  }
+};
+const submit = async () => {
+  try {
+      if (
+          !data.file ||
+          data.title === "" ||
+          data.author === "" ||
+          data.desc === "" ||
+          data.price === "" ||
+          data.language === ""
+      ) {
+          alert("Vui lòng nhập đầy đủ thông tin");
+      } else {
+          const formData = new FormData();
+          formData.append("file", data.file);
+          formData.append("title", data.title);
+          formData.append("author", data.author);
+          formData.append("desc", data.desc);
+          formData.append("price", data.price);
+          formData.append("language", data.language);
+
+          const response = await axios.post(
+              "http://localhost:3000/api/v1/add-book",
+              formData,
+              { headers }
+          );
+
+          setData({
+              file: null,
+              title: "",
+              author: "",
+              desc: "",    
+              price: "", 
+              language: "",
+          });
+          alert(response.data.message);
+      }
+  } catch (error) {
+      alert("Thêm sách thất bại");
+  }
+};
   return (
     <div className="h-full p-4">
     <h1 className="text-3xl md:text-5xl font-semibold text-zinc-300 mb-6">Thêm sách</h1>
@@ -60,9 +77,9 @@ const submit = async ()=>{
       <div className="mb-4">
         <label className="text-zinc-400 block mb-2">Ảnh bìa</label>
         <input
-          type="text"
+          type="file"
           className="w-full bg-zinc-900 text-zinc-100 p-3 rounded-lg outline-none border border-zinc-700 focus:border-yellow-500 transition"
-          name="url"
+          name="file"
           required
           value={data.url}
           onChange={change}

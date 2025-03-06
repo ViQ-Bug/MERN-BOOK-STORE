@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 require("./conn/conn");
 
@@ -19,6 +20,8 @@ app.use("/api/v1", Books)
 app.use("/api/v1", Favourite)
 app.use("/api/v1", Cart)
 app.use("/api/v1", Order)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 
 

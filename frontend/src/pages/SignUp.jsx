@@ -61,6 +61,19 @@ const SignUp = () => {
               onChange={change}
               />
           </div>
+          <div className='mt-4'>
+              <div>
+                <label htmlFor="" className='text-zinc-400'>Số điện thoại</label>
+              </div>
+              <input type="number" 
+              className='w-full bg-zinc-900 mt-2 p-2 rounded text-zinc-100 outline-none'
+              placeholder='Nhập số điện thoại'
+              name='email'
+              required
+              value={values.phonenumber}
+              onChange={change}
+              />
+          </div>
           <div>
               <label htmlFor="" className='text-zinc-400'>Password</label>
               <input type="password" 

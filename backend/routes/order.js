@@ -5,31 +5,10 @@ const Order = require("../models/order");
 const User = require("../models/user");
 
 //place order
-// router.post("/place-order",authenticateToken, async (req, res) => {
-//     try {
-//         const {id} = req.headers;
-//         const {order} = req.body;
-//         for (const orderData of order){
-//             const newOrder = new Order({user : id, book: orderData._id});
-//             const orderDataFrom = await newOrder.save();
-//             await User.findByIdAndUpdate(id,{
-//                    $push:{orders: orderDataFrom._id},
-//             })
-//             await User.findByIdAndUpdate(id,{
-//                    $pull:{cart:orderData._id},
-//             })
-//         }
-//         return res.json({
-//             status: "Thành công",
-//             message: "Đặt hàng thành công"})
-//     } catch (error) {
-//         return res.status(500).json({ message: "Lỗi máy chủ", error });
-//     }
-// })
 router.post("/place-order", authenticateToken, async (req, res) => {
     try {
-        const { id } = req.headers;  // Get user ID from headers
-        const { order } = req.body;  // Get order details from request body
+        const { id } = req.headers;  
+        const { order } = req.body;  
 
         if (!id) {
             return res.status(400).json({ message: "Thiếu ID người dùng" });
@@ -40,16 +19,16 @@ router.post("/place-order", authenticateToken, async (req, res) => {
         }
 
         const orderPromises = order.map(async (orderData) => {
-            const newOrder = new Order({ user: id, book: orderData._id }); // Use correct model name
+            const newOrder = new Order({ user: id, book: orderData._id }); 
             const orderDataFrom = await newOrder.save();
 
             await User.findByIdAndUpdate(id, {
                 $push: { orders: orderDataFrom._id },
-                $pull: { cart: orderData._id }  // Ensure correct item is removed from the cart
+                $pull: { cart: orderData._id }  
             });
         });
 
-        await Promise.all(orderPromises); // Run all database operations concurrently
+        await Promise.all(orderPromises); 
 
         return res.json({
             status: "Thành công",

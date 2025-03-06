@@ -32,9 +32,8 @@ const ViewBookDetails = () => {
     const headers = {
         id: localStorage.getItem('id'),
         authorization: `Bearer ${localStorage.getItem('token')}`,
-        bookid: id,
-    };
-
+        bookid: id
+    }
     const handleFavourite = async () => {
         try {
             const response = await axios.put("http://localhost:3000/api/v1/add-book-to-favourite", {}, { headers });
@@ -55,7 +54,7 @@ const ViewBookDetails = () => {
 
     const deleteBook = async () => {
         try {
-            const response = await axios.put("http://localhost:3000/api/v1/delete-book", {}, { headers });
+            const response = await axios.delete(`http://localhost:3000/api/v1/delete-book`, { headers });
             alert(response.data.message);
             nav("/all-book");
         } catch (error) {

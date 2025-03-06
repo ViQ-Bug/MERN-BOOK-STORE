@@ -9,6 +9,10 @@ const order = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "books"
     },
+    quantity: {
+        type: Number,
+        default: 1
+    },
     status:{
         type: String,
         default: "Đặt hàng",
